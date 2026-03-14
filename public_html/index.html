@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>uuid.airat.top | UUID v4 Generator</title>
+    <meta
+      name="description"
+      content="Generate UUID v4 values locally in your browser, one or in batches from 1 to 10,000. Private, fast, and offline-ready."
+    />
+    <meta
+      name="keywords"
+      content="uuid generator, uuid v4, uuid list generator, random uuid, offline, local, airattop"
+    />
+    <meta name="author" content="AiratTop" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://uuid.airat.top/" />
+    <meta property="og:title" content="UUID.airat.top" />
+    <meta
+      property="og:description"
+      content="Generate UUID v4 values locally in your browser, one or in batches from 1 to 10,000."
+    />
+    <meta property="og:image" content="https://uuid.airat.top/screenshot.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="UUID.airat.top" />
+    <meta
+      property="twitter:description"
+      content="Generate UUID v4 values locally in your browser, one or in batches from 1 to 10,000."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta name="msvalidate.01" content="A4ADBC8E0D3C862E117640B06AC788E3" />
+    <meta name="google-site-verification" content="zuHpP1sB8u4uv7gVtMj2RNaGCoxq2lGMYENOCMovy1Y" />
+    <meta name="yandex-verification" content="6d08a6d5c02c329e" />
+    <link rel="canonical" href="https://uuid.airat.top/" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="stylesheet" href="styles.css" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CVEGGNPJXK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-CVEGGNPJXK");
+    </script>
+  </head>
+  <body>
+    <div class="bg-glow" aria-hidden="true"></div>
+
+    <main class="shell">
+      <header class="brand">
+        <div class="brand-copy">
+          <p class="brand-eyebrow">uuid.airat.top</p>
+          <h1>UUID v4 Generator</h1>
+          <p class="brand-subtitle">
+            Offline-friendly. Instant copy. Zero history. Open-source. Privacy-first.
+            Generate one UUID or up to 10,000 UUIDs in one click.
+          </p>
+        </div>
+        <div class="brand-actions">
+          <button class="repo-link reset-button" id="resetDefaults" type="button">Reset defaults</button>
+          <a class="repo-link" href="https://github.com/AiratTop/uuid.airat.top" target="_blank" rel="noreferrer">
+            GitHub
+          </a>
+        </div>
+      </header>
+
+      <section class="panel is-active" id="panel-uuid" role="region" aria-label="UUID generator">
+        <label class="field uuid-count-field">
+          <span>Count (1-10000)</span>
+          <input type="number" id="uuidCount" min="1" max="10000" value="1" />
+          <small>Generates one UUID per line for quick paste into tables.</small>
+        </label>
+        <div class="output" id="uuidOutputWrap">
+          <div class="output-value output-value--uuid is-single" id="uuidOutput" aria-live="polite"></div>
+        </div>
+        <div class="action-row">
+          <button class="action-button primary" type="button" id="uuidCopy">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M16 1H6a2 2 0 0 0-2 2v12h2V3h10V1Zm3 4H10a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H10V7h9v14Z"
+                />
+              </svg>
+            </span>
+            Copy UUIDs
+          </button>
+          <button class="action-button secondary" type="button" id="uuidRefresh">
+            <span class="btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M20 12a8 8 0 0 1-14.31 4.9l-1.69 1.69V14h4.6l-1.61 1.61A6 6 0 1 0 12 6c-1.24 0-2.41.38-3.39 1.03L7.16 5.58A7.94 7.94 0 0 1 12 4a8 8 0 0 1 8 8Z"
+                />
+              </svg>
+            </span>
+            Regenerate UUIDs
+          </button>
+        </div>
+        <p class="status" id="uuidStatus" role="status"></p>
+      </section>
+
+      <footer class="doc-footer">
+        <p>
+          © 2026
+          <a href="https://airat.top" target="_blank" rel="author">Airat.Top</a>
+          |
+          <a href="https://github.com/AiratTop/uuid.airat.top" target="_blank" rel="noreferrer">GitHub</a>
+          |
+          <a href="https://privacy.airat.top" target="_blank" rel="noreferrer privacy-policy">Privacy</a>
+          |
+          <a href="https://terms.airat.top" target="_blank" rel="noreferrer terms-of-service">Terms</a>
+        </p>
+      </footer>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

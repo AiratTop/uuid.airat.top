@@ -1,0 +1,21 @@
+# uuid.airat.top
+
+Summary:
+UUID.airat.top is a static, privacy-first UUID v4 generator with single and batch output (1 to 10,000). Everything runs locally in the browser using secure randomness.
+
+Primary URL:
+https://uuid.airat.top
+
+Key features:
+- UUID v4 generator with batch output from 1 to 10,000 values.
+- One-click copy and regenerate actions.
+- Local settings persistence for count.
+
+Tech stack:
+HTML, CSS, and vanilla JavaScript.
+
+Privacy:
+No history or analytics; only local settings are stored. All generation happens locally.
+
+Contact:
+AiratTop - mail@airat.top
