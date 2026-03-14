@@ -118,9 +118,8 @@
           </button>
         </div>
         <p class="status" id="uuidStatus" role="status"></p>
-        <div class="card card--compact">
-          <h2>Batch Settings</h2>
-          <label class="field">
+        <div class="settings-strip" aria-label="Generator settings">
+          <label class="field field--center">
             <span>Version</span>
             <div class="version-switch" role="group" aria-label="UUID version">
               <button
@@ -137,7 +136,7 @@
             </div>
             <small>v4 is random. v7 includes Unix timestamp for sortable IDs.</small>
           </label>
-          <label class="field uuid-count-field">
+          <label class="field field--center uuid-count-field">
             <span>Count (1-10000)</span>
             <input type="number" id="uuidCount" min="1" max="10000" value="1" />
             <small>Generates one UUID per line for quick paste into tables.</small>
