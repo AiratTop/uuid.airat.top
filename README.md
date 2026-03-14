@@ -6,6 +6,8 @@ Static, privacy-first UUID v4/v7 generator that runs fully in the browser.
 
 Live site: https://uuid.airat.top/
 
+UUID API repo: https://github.com/AiratTop/uuid.api.airat.top
+
 ## Advantages
 
 - Fully local generation using `window.crypto`.
