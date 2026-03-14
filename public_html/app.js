@@ -3,6 +3,8 @@ const UUID_LIMITS = {
   countMax: 10000,
 };
 
+const UUID_VERSIONS = new Set(["4", "7"]);
+
 const ui = {
   reset: document.querySelector("#resetDefaults"),
   uuid: {
@@ -13,18 +15,21 @@ const ui = {
     copy: document.querySelector("#uuidCopy"),
     download: document.querySelector("#uuidDownload"),
     status: document.querySelector("#uuidStatus"),
+    versionButtons: Array.from(document.querySelectorAll("[data-uuid-version]")),
   },
 };
 
 const state = {
   messageTimers: new Map(),
   uuidList: [],
+  version: "4",
 };
 
 const STORAGE_KEY = "uuid-airat-top-settings-v1";
 
 const DEFAULTS = {
   count: 1,
+  version: "4",
 };
 
 function setStatus(target, message) {
@@ -83,10 +88,15 @@ function parseNumber(value, fallback) {
   return Number.isNaN(parsed) ? fallback : parsed;
 }
 
+function normalizeVersion(value) {
+  return UUID_VERSIONS.has(value) ? value : DEFAULTS.version;
+}
+
 function normalizeSettings(raw) {
   const safe = raw && typeof raw === "object" ? raw : {};
   return {
     count: clampNumber(parseNumber(safe.count, DEFAULTS.count), UUID_LIMITS.countMin, UUID_LIMITS.countMax),
+    version: normalizeVersion(String(safe.version || DEFAULTS.version)),
   };
 }
 
@@ -117,6 +127,7 @@ function getCurrentSettings() {
       UUID_LIMITS.countMin,
       UUID_LIMITS.countMax
     ),
+    version: state.version,
   };
 }
 
@@ -135,15 +146,18 @@ function setUuidCount(value) {
   return count;
 }
 
-function buildUuid() {
-  if (window.crypto && typeof window.crypto.randomUUID === "function") {
-    return window.crypto.randomUUID();
-  }
+function setUuidVersion(nextVersion) {
+  const normalizedVersion = normalizeVersion(nextVersion);
+  state.version = normalizedVersion;
 
-  const bytes = new Uint8Array(16);
-  window.crypto.getRandomValues(bytes);
-  bytes[6] = (bytes[6] & 0x0f) | 0x40;
-  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  ui.uuid.versionButtons.forEach((button) => {
+    const isActive = button.dataset.uuidVersion === normalizedVersion;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+}
+
+function formatUuidFromBytes(bytes) {
   const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0"));
   return (
     `${hex[0]}${hex[1]}${hex[2]}${hex[3]}` +
@@ -152,6 +166,43 @@ function buildUuid() {
     `-${hex[8]}${hex[9]}` +
     `-${hex[10]}${hex[11]}${hex[12]}${hex[13]}${hex[14]}${hex[15]}`
   );
+}
+
+function buildUuidV4() {
+  if (window.crypto && typeof window.crypto.randomUUID === "function") {
+    return window.crypto.randomUUID();
+  }
+
+  const bytes = new Uint8Array(16);
+  window.crypto.getRandomValues(bytes);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  return formatUuidFromBytes(bytes);
+}
+
+function buildUuidV7() {
+  const bytes = new Uint8Array(16);
+  window.crypto.getRandomValues(bytes);
+
+  const timestamp = BigInt(Date.now());
+  bytes[0] = Number((timestamp >> 40n) & 0xffn);
+  bytes[1] = Number((timestamp >> 32n) & 0xffn);
+  bytes[2] = Number((timestamp >> 24n) & 0xffn);
+  bytes[3] = Number((timestamp >> 16n) & 0xffn);
+  bytes[4] = Number((timestamp >> 8n) & 0xffn);
+  bytes[5] = Number(timestamp & 0xffn);
+
+  bytes[6] = (bytes[6] & 0x0f) | 0x70;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+
+  return formatUuidFromBytes(bytes);
+}
+
+function buildUuid() {
+  if (state.version === "7") {
+    return buildUuidV7();
+  }
+  return buildUuidV4();
 }
 
 function buildUuidList(count) {
@@ -164,6 +215,10 @@ function buildUuidList(count) {
 
 function getUuidCopyText() {
   return state.uuidList.join("\n");
+}
+
+function getVersionLabel() {
+  return `UUID v${state.version}`;
 }
 
 function getTimestampForFilename() {
@@ -200,7 +255,7 @@ function downloadUuidList() {
   }
   const timestamp = getTimestampForFilename();
   const suffix = state.uuidList.length > 1 ? `-${state.uuidList.length}` : "";
-  const filename = `uuid-v4${suffix}-${timestamp}.txt`;
+  const filename = `uuid-v${state.version}${suffix}-${timestamp}.txt`;
   downloadTextFile(`${text}\n`, filename);
   setStatus(ui.uuid.status, "TXT downloaded.");
 }
@@ -215,6 +270,7 @@ function refreshUuid() {
 
 function applySettings(settings) {
   const normalized = normalizeSettings(settings || DEFAULTS);
+  setUuidVersion(normalized.version);
   setUuidCount(normalized.count);
 }
 
@@ -235,7 +291,8 @@ function bindEvents() {
   });
 
   ui.uuid.copy.addEventListener("click", () => {
-    copyText(getUuidCopyText(), ui.uuid.status, state.uuidList.length > 1 ? "UUID list" : "UUID");
+    const label = state.uuidList.length > 1 ? `${getVersionLabel()} list` : getVersionLabel();
+    copyText(getUuidCopyText(), ui.uuid.status, label);
   });
 
   ui.uuid.download.addEventListener("click", downloadUuidList);
@@ -244,12 +301,21 @@ function bindEvents() {
     if (event.target.closest("button")) {
       return;
     }
-    copyText(getUuidCopyText(), ui.uuid.status, state.uuidList.length > 1 ? "UUID list" : "UUID");
+    const label = state.uuidList.length > 1 ? `${getVersionLabel()} list` : getVersionLabel();
+    copyText(getUuidCopyText(), ui.uuid.status, label);
   });
 
   ui.uuid.count.addEventListener("input", () => {
     refreshUuid();
     storeSettings();
+  });
+
+  ui.uuid.versionButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      setUuidVersion(button.dataset.uuidVersion);
+      refreshUuid();
+      storeSettings();
+    });
   });
 }
 

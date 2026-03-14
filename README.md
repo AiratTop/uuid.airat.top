@@ -2,14 +2,15 @@
 
 [![uuid.airat.top](https://raw.githubusercontent.com/AiratTop/uuid.airat.top/main/public_html/screenshot.png)](https://uuid.airat.top/)
 
-Static, privacy-first UUID v4 generator that runs fully in the browser.
+Static, privacy-first UUID v4/v7 generator that runs fully in the browser.
 
 Live site: https://uuid.airat.top/
 
 ## Advantages
 
 - Fully local generation using `window.crypto`.
-- UUID v4 list generation from 1 to 10,000 values with one-click copy.
+- UUID v4 and UUID v7 list generation from 1 to 10,000 values with one-click copy.
+- Quick version switcher (v4 random or v7 time-ordered).
 - Download generated UUIDs as a `.txt` file.
 - No history or analytics; only local settings are stored.
 - Instant copy on click with clear feedback.
