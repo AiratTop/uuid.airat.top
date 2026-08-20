@@ -2,7 +2,7 @@
 
 [![uuid.airat.top](https://raw.githubusercontent.com/AiratTop/uuid.airat.top/main/public_html/screenshot.png)](https://uuid.airat.top/)
 
-Static, privacy-first UUID v4/v7 generator that runs fully in the browser.
+Static, privacy-first UUID v4/v7 generator that runs fully in the browser. Deployed as static assets on Cloudflare Workers.
 
 - Live site: https://uuid.airat.top
 - Status page: https://status.airat.top
@@ -23,9 +23,14 @@ UUID API repo: https://github.com/AiratTop/uuid.api.airat.top
 
 ## What is inside
 
-- `index.html` - layout and metadata.
-- `styles.css` - theme, layout, and animations.
-- `app.js` - UUID generator logic and UI wiring.
+- `public_html/index.html` - layout and metadata.
+- `public_html/styles.css` - theme, layout, and animations.
+- `public_html/app.js` - UUID generator logic and UI wiring.
+- `wrangler.jsonc` - Cloudflare Worker and static asset configuration.
+
+## Deployment
+
+Cloudflare Workers Builds deploys the contents of `public_html` as static assets. The project has no build step; deployment uses `npx wrangler deploy` with the settings in `wrangler.jsonc`.
 
 ## License
 
