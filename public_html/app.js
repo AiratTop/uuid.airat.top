@@ -28,7 +28,7 @@ const state = {
 const STORAGE_KEY = "uuid-airat-top-settings-v1";
 
 const DEFAULTS = {
-  count: 3,
+  count: 1,
   version: "4",
 };
 
